@@ -96,7 +96,7 @@
   color: #999;
 }
 
-/* Dark Mode */
+/* 🌙 Dark Mode */
 .home.dark {
   background-color: #1e1e1e;
   color: #fff;
@@ -118,7 +118,7 @@
   color: #111;
 }
 
-/* Light Mode */
+/* 🌞 Light Mode */
 .home.light {
   background-color: #f0f0f0;
   color: #333;
@@ -140,6 +140,28 @@
   color: #fff;
 }
 
+/* 🖤 Black Mode (true black for OLED) */
+.home.black {
+  background-color: #000000;
+  color: #ffffff;
+}
+
+.home.black .todo_item {
+  background-color: #111111;
+  box-shadow: 0 2px 8px rgba(255,255,255,0.05);
+}
+
+.home.black .create_form input {
+  background-color: #111111;
+  color: #fff;
+  border: 1px solid #333;
+}
+
+.home.black .create_form button {
+  background-color: #ffffff;
+  color: #000;
+}
+
 @media (max-width: 400px) {
   .create_form input,
   .todo_item {
@@ -147,11 +169,28 @@
   }
 }
 
-
-.card {
-  padding: 2em;
+/* Theme Toggle Button */
+.theme-toggle {
+  padding: 8px 14px;
+  border-radius: 8px;
+  border: none;
+  cursor: pointer;
+  font-weight: bold;
+  transition: background 0.3s, color 0.3s;
 }
 
-.read-the-docs {
-  color: #888;
+.home.light .theme-toggle {
+  background: #333;
+  color: #fff;
 }
+
+.home.dark .theme-toggle {
+  background: #fff;
+  color: #111;
+}
+
+.home.black .theme-toggle {
+  background: #fff;
+  color: #000;
+}
+

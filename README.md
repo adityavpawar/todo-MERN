@@ -12,5 +12,6 @@ Also includes **Dark/Light Mode** toggle. Just download the code and enjoy the T
 - Edit and update tasks
 - Mark tasks as completed / uncompleted
 - Delete tasks
-- Dark/Light theme toggle
+- Light/Dark/Black theme toggle
+
 

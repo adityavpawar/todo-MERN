@@ -7,7 +7,7 @@ const Home = () => {
   const [todos, setTodos] = useState([]);
   const [editId, setEditId] = useState(null);
   const [editText, setEditText] = useState("");
-  const [darkMode, setDarkMode] = useState(false);
+  const [theme, setTheme] = useState("light"); // light | dark | black
 
   const API_URL = import.meta.env.VITE_API_BASE_URL;
 
@@ -51,31 +51,30 @@ const Home = () => {
     setEditText("");
   };
 
+  // 🔄 Cycle through Light → Dark → Black
+  const toggleTheme = () => {
+    setTheme((prev) =>
+      prev === "light" ? "dark" : prev === "dark" ? "black" : "light"
+    );
+  };
+
   return (
-    <div className={`home ${darkMode ? "dark" : "light"}`}>
-      {/* Top Bar */}
+    <div className={`home ${theme}`}>
+      {/* 🔘 Theme Toggle Button */}
       <div
         style={{
           width: "100%",
           display: "flex",
           justifyContent: "flex-end",
-          alignItems: "center",
           padding: "10px 20px",
         }}
       >
-        <button
-          onClick={() => setDarkMode(!darkMode)}
-          style={{
-            padding: "6px 12px",
-            borderRadius: 6,
-            border: "none",
-            cursor: "pointer",
-            backgroundColor: darkMode ? "#fff" : "#333",
-            color: darkMode ? "#333" : "#fff",
-            fontWeight: "bold",
-          }}
-        >
-          {darkMode ? "Light Mode" : "Dark Mode"}
+        <button className="theme-toggle" onClick={toggleTheme}>
+          {theme === "light"
+            ? "🌙 Dark"
+            : theme === "dark"
+            ? "🖤 Black"
+            : "☀️ Light"}
         </button>
       </div>
 
@@ -88,11 +87,7 @@ const Home = () => {
         todos.map((item) => (
           <div key={item._id} className="todo_item">
             <BsCircleFill
-              className="icon-circle"
-              style={{
-                color: item.completed ? "green" : "#888",
-                cursor: "pointer",
-              }}
+              className={`icon-circle ${item.completed ? "completed" : ""}`}
               onClick={() => toggleTodo(item._id)}
             />
             {editId === item._id ? (
@@ -128,3 +123,18 @@ const Home = () => {
 };
 
 export default Home;
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

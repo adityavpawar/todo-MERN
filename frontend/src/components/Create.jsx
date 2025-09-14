@@ -1,11 +1,10 @@
 import React, { useState } from "react";
-import axios from "axios";
+import API from "../api";
 
 const Create = ({ onAdd }) => {
   const [task, setTask] = useState("");
-  const API_URL = import.meta.env.VITE_API_BASE_URL;
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
 
     if (!task.trim()) {
@@ -13,13 +12,19 @@ const Create = ({ onAdd }) => {
       return;
     }
 
-    axios
-      .post(`${API_URL}/add`, { task })
-      .then((res) => {
-        setTask("");
-        onAdd(res.data);
-      })
-      .catch((err) => console.error("Error saving task:", err));
+    try {
+      const res = await API.post("/todos/add", { task });
+      setTask("");
+      onAdd(res.data); // Add new todo to state
+    } catch (err) {
+      console.error("Error saving task:", err);
+      if (err.response?.status === 401) {
+        alert("You must be logged in to add a task");
+        window.location.href = "/login";
+      } else {
+        alert("Error adding task");
+      }
+    }
   };
 
   return (

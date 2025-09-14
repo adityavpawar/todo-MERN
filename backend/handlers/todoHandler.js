@@ -1,20 +1,29 @@
 import Todo from "../models/Todo.js";
 
-// Get all todos
+// Get all todos sorted by position
 export const getTodos = async (req, res) => {
   try {
-    const todos = await Todo.find();
+    const todos = await Todo.find({ user: req.user }).sort("position"); //  sorted
     res.json(todos);
   } catch (err) {
     res.status(500).json({ message: "Error fetching todos", error: err });
   }
 };
 
-// Add a new todo
+// Add a new todo with next position
 export const addTodo = async (req, res) => {
   try {
     const { task } = req.body;
-    const newTodo = await Todo.create({ task });
+
+    // Find last position for this user
+    const lastTodo = await Todo.findOne({ user: req.user }).sort("-position");
+
+    const newTodo = await Todo.create({
+      task,
+      user: req.user,
+      position: lastTodo ? lastTodo.position + 1 : 0, // 👈 set order
+    });
+
     res.json(newTodo);
   } catch (err) {
     res.status(500).json({ message: "Error adding todo", error: err });
@@ -25,7 +34,8 @@ export const addTodo = async (req, res) => {
 export const deleteTodo = async (req, res) => {
   try {
     const { id } = req.params;
-    await Todo.findByIdAndDelete(id);
+    const todo = await Todo.findOneAndDelete({ _id: id, user: req.user });
+    if (!todo) return res.status(404).json({ message: "Task not found" });
     res.json({ message: "Task deleted", id });
   } catch (err) {
     res.status(500).json({ message: "Error deleting todo", error: err });
@@ -36,7 +46,7 @@ export const deleteTodo = async (req, res) => {
 export const toggleTodo = async (req, res) => {
   try {
     const { id } = req.params;
-    const todo = await Todo.findById(id);
+    const todo = await Todo.findOne({ _id: id, user: req.user });
     if (!todo) return res.status(404).json({ message: "Task not found" });
 
     todo.completed = !todo.completed;
@@ -53,14 +63,35 @@ export const updateTodo = async (req, res) => {
     const { id } = req.params;
     const { task } = req.body;
 
-    if (!task || task.trim() === "")
-      return res.status(400).json({ message: "Task cannot be empty" });
-
-    const updatedTodo = await Todo.findByIdAndUpdate(id, { task }, { new: true });
+    const updatedTodo = await Todo.findOneAndUpdate(
+      { _id: id, user: req.user },
+      { task },
+      { new: true }
+    );
     if (!updatedTodo) return res.status(404).json({ message: "Task not found" });
 
     res.json(updatedTodo);
   } catch (err) {
     res.status(500).json({ message: "Error updating todo", error: err });
+  }
+};
+
+// NEW: reorder todos
+export const reorderTodos = async (req, res) => {
+  try {
+    const { orderedIds } = req.body; // array of todo IDs in new order
+
+    await Promise.all(
+      orderedIds.map((id, index) =>
+        Todo.findOneAndUpdate(
+          { _id: id, user: req.user },
+          { position: index } // update position
+        )
+      )
+    );
+
+    res.json({ message: "Reordered successfully" });
+  } catch (err) {
+    res.status(500).json({ message: "Error reordering todos", error: err });
   }
 };

@@ -14,4 +14,5 @@ Also includes **Dark/Light Mode** toggle. Just download the code and enjoy the T
 - Delete tasks
 - Light/Dark/Black theme toggle
 - Drag and Drop feature
-- Simple Login and Sign-up 
+- Simple Login and Sign-up feature
+

@@ -12,9 +12,10 @@ Also includes **Dark/Light Mode** toggle.
 - Edit and update tasks
 - Mark tasks as completed / uncompleted
 - Delete tasks
-- Light/Dark/Black theme toggle
+- Black/Light/Dark theme toggle
 - Drag and Drop feature
 - Simple Login and Sign-up feature
+
 
 
 
